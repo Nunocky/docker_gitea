@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  server:
+    image: gitea/gitea:latest
+    container_name: gitea
+    hostname: gitea
+    restart: always
+    volumes:
+      - ./gitea_data:/var/lib/gitea
+      - ./gitea_config:/etc/gitea
+    ports:
+      - "3000:3000"
+      - "2222:2222"
+    networks:
+      - gm_network
+
+  mysql:
+    image: mysql:latest
+    hostname: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: p@ssw0rd
+      MYSQL_DATABASE: gitea
+      MYSQL_USER: butler
+      MYSQL_PASSWORD: p@ssw0rd
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - gm_network
+
+networks:
+  gm_network:
+    driver: bridge
